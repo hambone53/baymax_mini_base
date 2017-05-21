@@ -122,6 +122,17 @@ float g_RearIRDist_CM = 0;
 void TaskCB();
 void HB(); bool HBOn(); void HBOff();
 void HB(); bool HBOn(); void HBOff();
+extern void calculateVelAndPos(unsigned long tasktime);
+
+
+/**************************************************************************************
+ * Encoder Read Task
+ **************************************************************************************/
+ void EncoderRead_Task() {
+   Task& T = ts.currentTask();
+   calculateVelAndPos(T.getInterval());
+   //readEncoderTest();
+ }
 
 // Three tasks emulating accidental infinite loop
 Task tMotorControlTask(40, TASK_FOREVER, &MotorControl_Task, &ts, true);
@@ -147,14 +158,9 @@ void MotorControl_Task() {
 
 }
 
-/********************************
- * Encoder Read Task
- ********************************/
- void EncoderRead_Task() {
-   Task& T = ts.currentTask();
-   calculateVelAndPos(T.getInterval());
-   //readEncoderTest();
- }
+/**************************************************************************************
+ * IMU Processing Read Task
+ **************************************************************************************/
 
 void IMUProcessing_Task() {
   IMURead();
